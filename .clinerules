@@ -1,0 +1,66 @@
+# Voboost Code Style - Project Intelligence
+
+## Global Rules Distribution (CRITICAL)
+- ALL Voboost projects MUST include common rules from /Users/vitaly/voboost/voboost-codestyle/.clinerules
+- Project-specific rules should be added to individual project .clinerules files
+- This ensures consistency across the entire Voboost ecosystem
+
+## Language Policy (CRITICAL)
+- ALL code comments MUST be in English
+- ALL documentation MUST be in English
+- ALL variable names, function names, class names MUST be in English
+- ALL error messages MUST be in English
+- Configuration VALUES can support multiple languages including Russian
+- This policy is documented in memory bank and must be maintained
+
+## Naming Convention (CRITICAL)
+- Project name is ALWAYS "Voboost" (not "VoBoost")
+- Use "Voboost" in all documentation, comments, and user-facing text
+- This applies to titles, headers, and any references to the project name
+
+## Code Style Rules (CRITICAL)
+- ALL source code files MUST end with a blank line to avoid "No newline at end of file" warnings in diffs
+- This applies to .kt, .java, .yaml, .md and all other text files
+- Always add empty line at the end when creating or modifying files
+- NO EMOJI in any files - use plain text only for all documentation and code
+
+## Universal Project Patterns
+
+### Code Organization
+- All public API methods return Result<T> for consistent error handling
+- Never throw exceptions in public API
+- Use nullable properties for graceful missing value handling
+
+### File Structure
+- Memory bank documentation in memory-bank/ directory
+- All build files use Kotlin DSL (.gradle.kts) when possible
+
+### Testing Approach
+- Unit tests for all core functionality
+- Test resources in src/test/resources/
+- Aim for high coverage of public API
+
+### Documentation Standards
+- KDoc comments for all public APIs
+- Comprehensive README.md with usage examples
+- Implementation details in separate technical docs
+- Memory bank for development context
+
+## Development Workflow
+- Memory bank MUST be updated when discovering new patterns
+- All project information MUST be stored in memory bank, not in separate files
+- All changes should maintain backward compatibility
+- Unit tests must pass before any commits
+
+## Information Management Rules
+- NEVER create separate documentation files outside memory bank
+- All technical details, implementation notes, and project updates go in memory-bank/
+- Use memory bank files for all project knowledge preservation
+- Keep external files minimal and focused only on immediate technical needs
+
+## Code Style Integration
+- This repository provides centralized code style configuration for all Voboost projects
+- Use symlinks to distribute .editorconfig to maintain single source of truth
+- ktlint 1.0.1 for Kotlin formatting and linting
+- EditorConfig for IDE integration
+- Consistent formatting across all projects in Voboost ecosystem

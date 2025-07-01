@@ -73,3 +73,4 @@ ln -s ../voboost-codestyle/.editorconfig ./.editorconfig
 - Custom rules can be added to `ktlint_rules/` directory
 - Version updates managed centrally
 - IDE integration works automatically
+

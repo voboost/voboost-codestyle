@@ -5,6 +5,8 @@ This repository contains unified code formatting rules for all Voboost projects.
 ## Contents
 
 - `.editorconfig` - Core formatting rules for ktlint and IDE
+- `.clinerules` - Global project intelligence rules for all Voboost projects
+- `codestyle.gradle` - Centralized ktlint configuration script
 - `versions.properties` - Tool versions for consistency
 - `integration-example.gradle.kts` - Example integration configuration
 - `memory-bank/` - Complete project documentation
@@ -26,6 +28,28 @@ This repository contains unified code formatting rules for all Voboost projects.
 - **Encoding**: UTF-8
 - **Trailing comma**: disabled (conservative approach)
 
+## Global Project Rules
+
+This repository provides centralized project intelligence rules through `.clinerules` that apply to all Voboost projects:
+
+- **Language Policy**: All code, comments, and documentation must be in English
+- **Naming Convention**: Project name is always "Voboost" (not "VoBoost")
+- **Code Style**: All files must end with blank line, no emoji allowed
+- **Architecture Patterns**: Result<T> for error handling, nullable properties for graceful degradation
+- **Documentation Standards**: Memory bank for project knowledge, KDoc for public APIs
+
+### Project-specific rules
+
+Each Voboost project should reference the global rules and add only project-specific additions:
+
+```bash
+# In each project's .clinerules file
+## Global Rules (CRITICAL)
+- This project follows ALL common rules from ../voboost-codestyle/.clinerules
+- The rules below are PROJECT-SPECIFIC additions to the global rules
+- NEVER duplicate global rules here - they are inherited automatically
+```
+
 ## Project Integration
 
 ### 1. Create symlink to central configuration
@@ -44,39 +68,32 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
-ktlint {
-    version.set("1.0.1")
-
-    // Create symlink to central .editorconfig (ktlint looks for it in project root)
-    // ln -s ../voboost-codestyle/.editorconfig ./.editorconfig
-
-    // Additional settings
-    android.set(true)
-    ignoreFailures.set(false)
-    reporters {
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
-    }
-}
+// Apply Voboost code style configuration
+apply(from = "../voboost-codestyle/codestyle.gradle")
 ```
 
-### 2. Apply to all modules
+The centralized configuration automatically handles:
+- ktlint version management from `versions.properties`
+- Android project settings
+- Reporter configuration
+- File exclusion filters
+- Integration with check task
+- Additional convenience tasks (`formatCode`, `checkCodeStyle`)
+
+### 3. Multi-module projects
 
 For multi-module projects, add to root `build.gradle.kts`:
 
 ```kotlin
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-
-    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        version.set("1.0.1")
-        android.set(true)
-        ignoreFailures.set(false)
-    }
+    apply(from = "../voboost-codestyle/codestyle.gradle")
 }
 ```
 
-### 3. Available Gradle tasks
+This applies the centralized configuration to all submodules automatically.
+
+### 4. Available Gradle tasks
 
 After integration, the following tasks become available:
 
@@ -86,6 +103,10 @@ After integration, the following tasks become available:
 
 # Automatic code formatting
 ./gradlew ktlintFormat
+
+# Additional convenience tasks (provided by centralized config)
+./gradlew formatCode      # Same as ktlintFormat
+./gradlew checkCodeStyle  # Same as ktlintCheck
 
 # Check specific module
 ./gradlew :app:ktlintCheck

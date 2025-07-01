@@ -33,3 +33,4 @@ Projects use symbolic links to central `.editorconfig` file to ensure single sou
 - Automated enforcement through ktlint
 - Easy integration for new projects
 - IDE support for real-time formatting
+

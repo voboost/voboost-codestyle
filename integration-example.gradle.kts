@@ -51,3 +51,4 @@ tasks.register("checkCodeStyle") {
 tasks.named("check") {
     dependsOn("ktlintCheck")
 }
+

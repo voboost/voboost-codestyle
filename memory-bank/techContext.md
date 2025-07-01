@@ -101,3 +101,4 @@ ktlint {
 - Incremental checking for faster builds
 - Parallel execution support in Gradle
 - Caching of ktlint results
+

@@ -39,3 +39,4 @@ Centralized code style configuration repository that provides:
 - Consistent formatting across all Voboost repositories
 - Reduced style-related code review comments
 - Easy integration for new projects (< 5 minutes setup)
+

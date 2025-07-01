@@ -1,0 +1,48 @@
+// Voboost Code Style Configuration
+// Apply this script to enable unified code style across all Voboost projects
+
+// Load versions from properties file
+def codeStyleVersions = new Properties()
+file("../voboost-codestyle/versions.properties").withInputStream {
+    codeStyleVersions.load(it)
+}
+
+// Configure ktlint
+ktlint {
+    version = codeStyleVersions.getProperty("ktlint.version")
+
+    // Android project settings
+    android = true
+
+    // Do not ignore formatting errors
+    ignoreFailures = false
+
+    // Reporter configuration
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+    }
+
+    // File filters to exclude
+    filter {
+        exclude "**/generated/**"
+        exclude "**/build/**"
+    }
+}
+
+// Integration with check task
+check.dependsOn ktlintCheck
+
+// Additional convenience tasks
+task formatCode {
+    group = "formatting"
+    description = "Formats all Kotlin code using ktlint"
+    dependsOn ktlintFormat
+}
+
+task checkCodeStyle {
+    group = "verification"
+    description = "Checks code style using ktlint"
+    dependsOn ktlintCheck
+}
+
