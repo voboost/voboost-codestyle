@@ -29,6 +29,10 @@ ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
 # Line length
 max_line_length = 120
 
+# Disable problematic rules for Compose and BEM naming
+ktlint_standard_function-naming = disabled
+ktlint_standard_filename = disabled
+
 # Other Kotlin formatting rules
 ij_kotlin_align_multiline_parameters = false
 ij_kotlin_align_multiline_parameters_in_calls = false

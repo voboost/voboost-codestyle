@@ -17,6 +17,13 @@ ktlint {
     // Do not ignore formatting errors
     ignoreFailures = false
 
+    // Disable problematic rules for Android Compose and BEM naming standards
+    disabledRules = [
+        "standard:function-naming",     // Allow Android Compose functions to use PascalCase (e.g., @Composable functions)
+        "standard:filename",            // Allow BEM naming like Component.test-unit.kt
+        "standard:class-naming"         // Allow BEM file naming patterns
+    ]
+
     // Reporter configuration
     reporters {
         reporter "plain"
