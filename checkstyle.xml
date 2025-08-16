@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Automotive-specific rules -->
+    <module name="LineLength">
+        <property name="max" value="120"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+    </module>
+
+    <module name="TreeWalker">
+        <!-- Naming conventions -->
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="VariableName"/>
+        <module name="ConstantName"/>
+        <module name="PackageName"/>
+
+        <!-- Code structure -->
+        <module name="NeedBraces"/>
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+
+        <!-- Imports -->
+        <module name="AvoidStarImport"/>
+        <module name="UnusedImports"/>
+        <module name="ImportOrder">
+            <property name="groups" value="/^java\./,javax,android,androidx,com,org"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+        </module>
+
+        <!-- Performance rules for automotive -->
+        <module name="StringLiteralEquality"/>
+        <module name="EqualsHashCode"/>
+        <module name="SimplifyBooleanExpression"/>
+
+        <!-- BEM naming compatibility -->
+        <module name="Regexp">
+            <property name="format" value=".*\.test-(unit|visual)\.java$"/>
+            <property name="illegalPattern" value="false"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="BEM test file naming pattern is allowed"/>
+        </module>
+
+        <!-- Custom View specific rules -->
+        <module name="Regexp">
+            <property name="format" value="public\s+class\s+\w+\s+extends\s+(View|ViewGroup)"/>
+            <property name="illegalPattern" value="false"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="Custom View classes should extend View or ViewGroup"/>
+        </module>
+
+        <!-- Automotive performance rules -->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+
+        <module name="NPathComplexity">
+            <property name="max" value="200"/>
+        </module>
+
+        <!-- Method length for automotive code -->
+        <module name="MethodLength">
+            <property name="max" value="150"/>
+            <property name="countEmpty" value="false"/>
+        </module>
+
+        <!-- Parameter count for maintainability -->
+        <module name="ParameterNumber">
+            <property name="max" value="7"/>
+            <property name="ignoreOverriddenMethods" value="true"/>
+        </module>
+
+        <!-- Code quality -->
+        <module name="EmptyBlock"/>
+        <module name="EmptyStatement"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="DefaultComesLast"/>
+        <module name="FallThrough"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="OneStatementPerLine"/>
+
+        <!-- Whitespace -->
+        <module name="WhitespaceAround"/>
+        <module name="WhitespaceAfter"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+
+        <!-- Modifiers -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- Blocks -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+
+        <!-- Class design -->
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
+        <module name="VisibilityModifier"/>
+
+        <!-- Miscellaneous -->
+        <module name="ArrayTypeStyle"/>
+        <module name="UpperEll"/>
+        <module name="OuterTypeFilename"/>
+
+        <!-- Java-specific best practices -->
+        <module name="IllegalInstantiation">
+            <property name="classes" value="java.lang.Boolean,java.lang.Integer,java.lang.Long,java.lang.Short,java.lang.Byte,java.lang.Float,java.lang.Double"/>
+        </module>
+
+        <!-- Annotations -->
+        <module name="AnnotationLocation">
+            <property name="allowSamelineMultipleAnnotations" value="false"/>
+            <property name="allowSamelineSingleParameterlessAnnotation" value="false"/>
+            <property name="allowSamelineParameterizedAnnotation" value="false"/>
+        </module>
+
+        <!-- Exception handling -->
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value="java.lang.Exception,java.lang.Throwable,java.lang.RuntimeException"/>
+        </module>
+
+        <!-- Javadoc requirements for public API -->
+        <module name="MissingJavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+        </module>
+
+        <module name="MissingJavadocType">
+            <property name="scope" value="public"/>
+        </module>
+
+        <!-- Android-specific rules -->
+        <module name="Regexp">
+            <property name="format" value="Log\.[dviwe]\("/>
+            <property name="illegalPattern" value="false"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="Use Android Log class for logging"/>
+        </module>
+    </module>
+
+    <!-- File-level checks -->
+    <module name="FileTabCharacter"/>
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Size violations -->
+    <module name="FileLength">
+        <property name="max" value="2000"/>
+    </module>
+</module>

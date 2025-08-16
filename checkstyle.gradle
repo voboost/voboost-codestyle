@@ -1,0 +1,41 @@
+// Checkstyle configuration for Java code style validation
+apply plugin: 'checkstyle'
+
+// Load versions from properties file
+def codeStyleVersions = new Properties()
+file("../voboost-codestyle/versions.properties").withInputStream {
+    codeStyleVersions.load(it)
+}
+
+checkstyle {
+    toolVersion = codeStyleVersions.getProperty("checkstyle.version")
+    configFile = file("../voboost-codestyle/checkstyle.xml")
+    ignoreFailures = false
+    showViolations = true
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+task checkJavaStyle(type: Checkstyle) {
+    description = 'Run Checkstyle analysis for Java files'
+    group = 'verification'
+    source 'src/main/java'
+    include '**/*.java'
+    exclude '**/generated/**'
+    exclude '**/*.test-*.java'  // Exclude BEM co-located test files from main validation
+    classpath = files()
+}
+
+task checkJavaTestStyle(type: Checkstyle) {
+    description = 'Run Checkstyle analysis for Java test files'
+    group = 'verification'
+    source 'src/main/java'
+    include '**/*.test-*.java'  // Include only BEM co-located test files
+    exclude '**/generated/**'
+    classpath = files()
+}

@@ -62,5 +62,46 @@
 - This repository provides centralized code style configuration for all Voboost projects
 - Use symlinks to distribute .editorconfig to maintain single source of truth
 - ktlint 1.0.1 for Kotlin formatting and linting
+- Checkstyle and Spotless for Java formatting and linting
 - EditorConfig for IDE integration
 - Consistent formatting across all projects in Voboost ecosystem
+
+## Java Language Support (CRITICAL)
+
+### Java Code Style Rules
+- **Google Java Style Guide** as base with automotive modifications
+- **Line length**: 120 characters (consistent with Kotlin)
+- **Indentation**: 4 spaces (no tabs)
+- **Import organization**: Static imports first, then regular imports
+- **Braces**: Always use braces for control structures
+- **Naming conventions**:
+  - Classes: PascalCase
+  - Methods: camelCase
+  - Constants: UPPER_SNAKE_CASE
+  - Packages: lowercase with dots
+
+### BEM Architecture Integration for Java
+- **Co-located test files**: `*.test-unit.java`, `*.test-visual.java`
+- **Component structure**: mirrors Kotlin BEM patterns
+- **Shared screenshot directories**: with Kotlin tests
+- **File naming**: `ComponentName.java`, `ComponentNameButton.java`, `ComponentNameTheme.java`
+
+### Java Custom View Patterns (CRITICAL)
+- **Extend View or ViewGroup** for custom components
+- **Constructor patterns**: Support all 4 Android constructors
+- **State management**: Implement onSaveInstanceState/onRestoreInstanceState
+- **Performance**: Optimize onDraw and onMeasure for automotive hardware
+
+### Java-Kotlin Interoperability Rules
+- **Primary implementation**: Java Custom View contains all logic
+- **Kotlin wrapper**: Lightweight AndroidView integration only
+- **Data sharing**: Reuse Kotlin data classes where possible
+- **Theme consistency**: Java components use same theme values as Kotlin
+- **API compatibility**: Both implementations expose similar public APIs
+
+### Documentation Policy for Java
+- **NO memory bank usage** - all documentation goes in .roorules and README.md files
+- **Technical details**: Document in project .roorules files
+- **Usage examples**: Document in README.md files
+- **Architecture decisions**: Document in .roorules files
+

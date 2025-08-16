@@ -7,7 +7,7 @@ file("../voboost-codestyle/versions.properties").withInputStream {
     codeStyleVersions.load(it)
 }
 
-// Configure ktlint
+// Configure ktlint for Kotlin
 ktlint {
     version = codeStyleVersions.getProperty("ktlint.version")
 
@@ -37,19 +37,89 @@ ktlint {
     }
 }
 
+// Configure Checkstyle for Java
+checkstyle {
+    toolVersion = codeStyleVersions.getProperty("checkstyle.version")
+    configFile = file("../voboost-codestyle/checkstyle.xml")
+    ignoreFailures = false
+    showViolations = true
+}
+
+// Configure Spotless for Java formatting
+spotless {
+    java {
+        target 'src/**/*.java'
+        targetExclude '**/generated/**'
+        targetExclude '**/build/**'
+
+        googleJavaFormat(codeStyleVersions.getProperty("google.java.format.version"))
+            .aosp()
+            .reflowLongStrings()
+            .skipJavadocFormatting()
+
+        removeUnusedImports()
+        importOrder('java', 'javax', 'android', 'androidx', 'com', 'org', '')
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    kotlin {
+        target 'src/**/*.kt'
+        targetExclude '**/generated/**'
+        targetExclude '**/build/**'
+
+        ktlint(codeStyleVersions.getProperty("ktlint.version"))
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
 // Integration with check task
 check.dependsOn ktlintCheck
+check.dependsOn checkstyleMain
 
-// Additional convenience tasks
+// Kotlin convenience tasks
+task formatKotlinCode {
+    group = "formatting"
+    description = "Formats Kotlin code using ktlint"
+    dependsOn ktlintFormat
+}
+
+task checkKotlinStyle {
+    group = "verification"
+    description = "Checks Kotlin code style using ktlint"
+    dependsOn ktlintCheck
+}
+
+// Java convenience tasks
+task formatJavaCode {
+    group = "formatting"
+    description = "Formats Java code using Spotless"
+    dependsOn spotlessJavaApply
+}
+
+task checkJavaStyle {
+    group = "verification"
+    description = "Checks Java code style using Checkstyle"
+    dependsOn checkstyleMain
+}
+
+task checkJavaFormat {
+    group = "verification"
+    description = "Checks Java code formatting using Spotless"
+    dependsOn spotlessJavaCheck
+}
+
+// Universal convenience tasks
 task formatCode {
     group = "formatting"
-    description = "Formats all Kotlin code using ktlint"
-    dependsOn ktlintFormat
+    description = "Formats all code (Kotlin and Java)"
+    dependsOn formatKotlinCode, formatJavaCode
 }
 
 task checkCodeStyle {
     group = "verification"
-    description = "Checks code style using ktlint"
-    dependsOn ktlintCheck
+    description = "Checks all code style (Kotlin and Java)"
+    dependsOn checkKotlinStyle, checkJavaStyle, checkJavaFormat
 }
 

@@ -1,0 +1,94 @@
+// Spotless configuration for universal code formatting
+apply plugin: 'com.diffplug.spotless'
+
+// Load versions from properties file
+def codeStyleVersions = new Properties()
+file("versions.properties").withInputStream {
+    codeStyleVersions.load(it)
+}
+
+    java {
+        target 'src/**/*.java'
+        targetExclude '**/generated/**'
+        targetExclude '**/build/**'
+
+        // Use Google Java Format with AOSP style (4-space indentation)
+        googleJavaFormat(codeStyleVersions.getProperty("google.java.format.version"))
+            .aosp()
+            .reflowLongStrings()
+            .skipJavadocFormatting()
+
+        // Import organization
+        removeUnusedImports()
+        importOrder('java', 'javax', 'android', 'androidx', 'com', 'org', '')
+
+        // Basic formatting
+        trimTrailingWhitespace()
+        endWithNewline()
+
+        // Custom formatting rules for automotive code
+        custom 'noWildcardImports', {
+            if (it.contains('import .*\\*;')) {
+                throw new AssertionError('Wildcard imports are not allowed')
+            }
+        }
+
+        // Ensure proper line length for automotive displays
+        custom 'lineLengthCheck', {
+            def lines = it.split('\n')
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].length() > 120) {
+                    throw new AssertionError("Line ${i + 1} exceeds 120 characters: ${lines[i].length()} chars")
+                }
+            }
+        }
+
+        // Android-specific formatting
+        custom 'androidLogFormatting', {
+            // Ensure consistent Log.d/i/w/e formatting
+            it.replaceAll(/Log\.([dviwe])\(\s*([^,]+)\s*,\s*([^)]+)\s*\)/, 'Log.$1($2, $3)')
+        }
+
+        // BEM test file support
+        custom 'bemTestFileSupport', {
+            // Allow BEM naming patterns in test files
+            if (it.contains('.test-unit.java') || it.contains('.test-visual.java')) {
+                return it // No additional formatting for BEM test files
+            }
+            return it
+        }
+    }
+
+    kotlin {
+        target 'src/**/*.kt'
+        targetExclude '**/generated/**'
+
+        ktlint(codeStyleVersions.getProperty("ktlint.version"))
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+task formatJavaCode {
+    description = 'Format Java code using Spotless'
+    group = 'formatting'
+    dependsOn spotlessJavaApply
+}
+
+task checkJavaFormat {
+    description = 'Check Java code formatting using Spotless'
+    group = 'verification'
+    dependsOn spotlessJavaCheck
+}
+
+task formatAllCode {
+    description = 'Format both Java and Kotlin code using Spotless'
+    group = 'formatting'
+    dependsOn spotlessApply
+}
+
+task checkAllFormat {
+    description = 'Check both Java and Kotlin code formatting using Spotless'
+    group = 'verification'
+    dependsOn spotlessCheck
+}

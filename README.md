@@ -15,10 +15,38 @@ This repository contains unified code formatting rules for all Voboost projects.
 ## Supported Technologies
 
 - **Kotlin** (.kt, .kts files)
+- **Java** (.java files)
 - **Android XML** (layouts, manifests)
 - **Gradle** (.gradle, .gradle.kts)
 - **YAML/JSON** configuration files
 - **Markdown** documentation
+
+## Java Support
+
+### Overview
+voboost-codestyle provides comprehensive Java support alongside Kotlin, enabling:
+- **Java Custom View Components**: Full-featured Android custom views with complete rendering logic
+- **Kotlin Compose Wrappers**: Lightweight AndroidView integration for Compose compatibility
+- **Unified Code Style**: Consistent formatting and validation across both languages
+- **BEM Methodology**: Co-located test files following BEM naming conventions
+
+### Architecture Patterns
+- **Java Custom View**: Primary implementation with all business logic and rendering
+- **Kotlin Compose Wrapper**: Minimal AndroidView bridge for Compose integration
+- **Shared Resources**: Common theme values, data models, and test screenshots
+- **Hybrid Development**: Seamless integration between Java components and Kotlin Compose UI
+
+### BEM Structure for Java
+- **Test files**: `*.test-unit.java`, `*.test-visual.java`
+- **Location**: Co-located with component files in `src/main/java/`
+- **Screenshots**: Shared screenshot directories with Kotlin tests
+- **Naming**: Consistent BEM naming across Java and Kotlin files
+
+### Java Code Style Tools
+- **Checkstyle**: Code style validation with automotive-specific rules
+- **Spotless**: Code formatting using Google Java Format (AOSP style)
+- **Import Organization**: Consistent import ordering and unused import removal
+- **Line Length**: 120 characters maximum for automotive display compatibility
 
 ## Core Rules
 
@@ -70,10 +98,23 @@ plugins {
 
 // Apply Voboost code style configuration
 apply(from = "../voboost-codestyle/codestyle.gradle")
+apply(from = "../voboost-codestyle/checkstyle.gradle")  // For Java support
+apply(from = "../voboost-codestyle/spotless.gradle")    // For Java support
+```
+
+For Java support, also add the Spotless plugin:
+
+```kotlin
+plugins {
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("com.diffplug.spotless") version "6.22.0"  // For Java support
+}
 ```
 
 The centralized configuration automatically handles:
 - ktlint version management from `versions.properties`
+- Checkstyle for Java code style validation
+- Spotless for Java code formatting
 - Android project settings
 - Reporter configuration
 - File exclusion filters
@@ -98,19 +139,61 @@ This applies the centralized configuration to all submodules automatically.
 After integration, the following tasks become available:
 
 ```bash
-# Check code style compliance
-./gradlew ktlintCheck
+# Kotlin tasks
+./gradlew ktlintCheck        # Check Kotlin code style
+./gradlew ktlintFormat       # Format Kotlin code
+./gradlew formatKotlinCode   # Same as ktlintFormat (new)
+./gradlew checkKotlinStyle   # Same as ktlintCheck (new)
 
-# Automatic code formatting
-./gradlew ktlintFormat
+# Java tasks
+./gradlew checkJavaStyle     # Check Java code style using Checkstyle
+./gradlew formatJavaCode     # Format Java code using Spotless
+./gradlew checkJavaFormat    # Check Java code formatting using Spotless
+./gradlew checkstyleMain     # Run Checkstyle on main source set
+./gradlew checkstyleTest     # Run Checkstyle on test source set
 
-# Additional convenience tasks (provided by centralized config)
-./gradlew formatCode      # Same as ktlintFormat
-./gradlew checkCodeStyle  # Same as ktlintCheck
+# Universal tasks (both languages)
+./gradlew formatCode         # Format all code (Kotlin and Java)
+./gradlew checkCodeStyle     # Check all code style (Kotlin and Java)
+./gradlew formatAllCode      # Same as formatCode
+./gradlew checkAllFormat     # Check all formatting
 
-# Check specific module
+# Module-specific tasks
 ./gradlew :app:ktlintCheck
 ./gradlew :library:ktlintFormat
+./gradlew :app:checkJavaStyle
+./gradlew :library:formatJavaCode
+./gradlew :component:checkCodeStyle
+```
+
+### 5. Java-specific Configuration
+
+#### Checkstyle Rules
+The Java configuration includes automotive-specific rules:
+- **Line length**: Maximum 120 characters for automotive displays
+- **Cyclomatic complexity**: Maximum 10 for maintainability
+- **Method length**: Maximum 150 lines
+- **Parameter count**: Maximum 7 parameters
+- **Import organization**: Specific order for Android projects
+- **BEM test file support**: Special handling for `*.test-unit.java` files
+
+#### Spotless Formatting
+Java code is formatted using Google Java Format with AOSP style:
+- **Indentation**: 4 spaces (AOSP style)
+- **Import order**: `java`, `javax`, `android`, `androidx`, `com`, `org`
+- **Line wrapping**: Automatic for long strings
+- **Javadoc**: Preserved formatting
+- **Custom rules**: No wildcard imports, consistent Android Log formatting
+
+#### BEM Test File Handling
+Special support for BEM methodology:
+```java
+// Main component
+MyComponent.java
+
+// Co-located test files
+MyComponent.test-unit.java    // Unit tests
+MyComponent.test-visual.java  // Visual regression tests
 ```
 
 ## IDE Setup
@@ -130,13 +213,48 @@ Install the **EditorConfig for VS Code** extension. Settings will be applied aut
 
 ### GitHub Actions
 
+#### Complete Code Style Check (Kotlin + Java)
 ```yaml
 name: Code Style Check
 
 on: [push, pull_request]
 
 jobs:
-  ktlint:
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Create symlink to .editorconfig
+      run: ln -s ../voboost-codestyle/.editorconfig ./.editorconfig
+
+    - name: Check Kotlin code style
+      run: ./gradlew ktlintCheck
+
+    - name: Check Java code style
+      run: ./gradlew checkJavaStyle
+
+    - name: Check Java code formatting
+      run: ./gradlew checkJavaFormat
+
+    # Alternative: Check all at once
+    # - name: Check all code style
+    #   run: ./gradlew checkCodeStyle
+```
+
+#### Separate Jobs for Kotlin and Java
+```yaml
+name: Code Style Check
+
+on: [push, pull_request]
+
+jobs:
+  kotlin-style:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -147,6 +265,20 @@ jobs:
         distribution: 'temurin'
     - name: Run ktlint
       run: ./gradlew ktlintCheck
+
+  java-style:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Run Checkstyle
+      run: ./gradlew checkJavaStyle
+    - name: Check Java formatting
+      run: ./gradlew checkJavaFormat
 ```
 
 ## Projects using this configuration
