@@ -19,11 +19,12 @@
 ## Testing
 - Unit tests for all core functionality, must pass before any commits
 - Aim for high coverage of public API
+- All warnings in tests must be fixed
+- Test MUST NOT output anything to console in successful pass
 
 ## Development Workflow
-- Memory bank MUST be updated when discovering new patterns
-- All project information MUST be stored in memory bank, not in separate files
 - All changes should maintain backward compatibility
+- Use `mv` to move files, not read/write operations
 
 ## Kotlin
 - All public API methods return Result<T> for consistent error handling
@@ -31,3 +32,10 @@
 - Use nullable properties for graceful missing value handling
 - All build files use Kotlin DSL (.gradle.kts) when possible
 - KDoc comments for all public APIs
+
+## JavaScript
+- Follow JavaScript Style Guide (4-space indent)
+- Use NPM scripts exclusively; they should be silent on success
+- Run `npm run lint` before commits; never use `eslint-disable`
+- Use temporary files for complex script validation, not `node -e`
+- Tests use AVA, are located in `test/` (`*.test.js`), and run via `npm test`
