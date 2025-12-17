@@ -108,4 +108,3 @@ ij_java_space_before_while_parentheses = true
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = false
-
