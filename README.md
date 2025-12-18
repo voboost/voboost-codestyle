@@ -4,8 +4,10 @@ This repository contains unified code formatting rules for all Voboost projects.
 
 ## Contents
 
-- `.editorconfig` - Core formatting rules for ktlint and IDE
+- `.editorconfig` - Core formatting rules for ktlint, IDE, and JavaScript
 - `.clinerules` - Global project intelligence rules for all Voboost projects
+- `config-prettier.mjs` - Shared Prettier configuration for JavaScript
+- `config-eslint.mjs` - Shared ESLint configuration for JavaScript
 - `codestyle.gradle` - Centralized ktlint configuration script
 - `versions.properties` - Tool versions for consistency
 - `integration-example.gradle.kts` - Example integration configuration
@@ -16,6 +18,7 @@ This repository contains unified code formatting rules for all Voboost projects.
 
 - **Kotlin** (.kt, .kts files)
 - **Java** (.java files)
+- **JavaScript/Node.js** (.js, .mjs files)
 - **Android XML** (layouts, manifests)
 - **Gradle** (.gradle, .gradle.kts)
 - **YAML/JSON** configuration files
@@ -47,6 +50,55 @@ voboost-codestyle provides comprehensive Java support alongside Kotlin, enabling
 - **Spotless**: Code formatting using Google Java Format (AOSP style)
 - **Import Organization**: Consistent import ordering and unused import removal
 - **Line Length**: 120 characters maximum for automotive display compatibility
+
+## JavaScript Support
+
+### Overview
+voboost-codestyle provides JavaScript/Node.js support for Frida agent projects:
+- **Prettier**: Code formatting (100 char line, 4 spaces, single quotes)
+- **ESLint**: Code quality rules (no-console except Logger files)
+- **ktlint**: Kotlin stub formatting
+
+### JavaScript Code Style Rules
+- **Line length**: 100 characters
+- **Indentation**: 4 spaces
+- **Quotes**: Single quotes
+- **Semicolons**: Required
+- **Trailing commas**: ES5 style
+- **Console**: Forbidden except in Logger files
+
+### JavaScript Project Integration
+
+1. Create symlink to .editorconfig:
+   ```bash
+   ln -s ../voboost-codestyle/.editorconfig .editorconfig
+   ```
+
+2. Add dependencies to package.json:
+   ```json
+   {
+       "devDependencies": {
+           "@eslint/js": "^9.39.1",
+           "eslint": "^9.39.1",
+           "eslint-config-prettier": "^10.0.1",
+           "globals": "^16.0.0",
+           "prettier": "^3.4.2"
+       }
+   }
+   ```
+
+3. Use shared configs in npm scripts:
+   ```json
+   {
+       "scripts": {
+           "lint": "eslint src --fix --config ../voboost-codestyle/config-eslint.mjs && prettier --write 'src/**/*.js' --config ../voboost-codestyle/config-prettier.mjs"
+       }
+   }
+   ```
+
+### Projects using JavaScript configuration
+- [voboost-script](../voboost-script) - Frida agent scripts
+- [voboost-stubs](../voboost-stubs) - Stub applications for testing
 
 ## Core Rules
 
@@ -286,6 +338,8 @@ jobs:
 - [voboost](../voboost)
 - [voboost-config](../voboost-config)
 - [voboost-config-demo](../voboost-config-demo)
+- [voboost-script](../voboost-script) - Frida agent scripts
+- [voboost-stubs](../voboost-stubs) - Stub applications for testing
 
 ## Updating rules
 
