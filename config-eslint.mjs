@@ -23,9 +23,9 @@ export default [
             'no-console': 'error',
         },
     },
-    // Allow console only in logger files
+    // Allow console only in build files and test files
     {
-        files: ['**/logger.js', '**/logger.mjs', '**/Logger.js', '**/Logger.mjs'],
+        files: ['**/build-*.mjs', '**/*.test.js', '**/*.test.mjs'],
         rules: {
             'no-console': 'off',
         },
