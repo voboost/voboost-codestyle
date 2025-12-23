@@ -11,6 +11,9 @@ insert_final_newline = true
 # Set default charset
 charset = utf-8
 
+# Line length for all files
+max_line_length = 100
+
 # Indentation for Kotlin files
 [*.{kt,kts}]
 indent_style = space
@@ -26,12 +29,11 @@ ij_kotlin_allow_trailing_comma = false
 # Import ordering
 ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
 
-# Line length
-max_line_length = 120
-
 # Disable problematic rules for Compose and BEM naming
 ktlint_standard_function-naming = disabled
 ktlint_standard_filename = disabled
+# Allow lowercase enum values for better YAML serialization compatibility
+ktlint_standard_enum-entry-name-case = disabled
 
 # Other Kotlin formatting rules
 ij_kotlin_align_multiline_parameters = false
@@ -78,7 +80,6 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 continuation_indent_size = 8
-max_line_length = 120
 
 # Java-specific formatting
 ij_java_align_multiline_parameters = false

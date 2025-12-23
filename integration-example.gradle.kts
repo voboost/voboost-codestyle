@@ -1,5 +1,5 @@
 // Example integration in build.gradle.kts (root project file)
-// This example shows how to integrate voboost-codestyle for both Kotlin and Java support
+// This example shows how to integrate voboost-codestyle for Kotlin and Java support
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
@@ -44,8 +44,12 @@ subprojects {
 
         // Reporter configuration
         reporters {
-            reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
-            reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+            reporter(
+                org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN
+            )
+            reporter(
+                org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE
+            )
         }
 
         // File filters for exclusions
@@ -69,10 +73,9 @@ subprojects {
             target("src/**/*.java")
             targetExclude("**/generated/**", "**/build/**")
 
-            googleJavaFormat(codeStyleVersions.getProperty("google.java.format.version"))
-                .aosp()
-                .reflowLongStrings()
-                .skipJavadocFormatting()
+            googleJavaFormat(
+                codeStyleVersions.getProperty("google.java.format.version")
+            ).aosp().reflowLongStrings().skipJavadocFormatting()
 
             removeUnusedImports()
             importOrder("java", "javax", "android", "androidx", "com", "org", "")

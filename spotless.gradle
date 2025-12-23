@@ -7,6 +7,7 @@ file("versions.properties").withInputStream {
     codeStyleVersions.load(it)
 }
 
+spotless {
     java {
         target 'src/**/*.java'
         targetExclude '**/generated/**'
@@ -37,8 +38,8 @@ file("versions.properties").withInputStream {
         custom 'lineLengthCheck', {
             def lines = it.split('\n')
             for (int i = 0; i < lines.length; i++) {
-                if (lines[i].length() > 120) {
-                    throw new AssertionError("Line ${i + 1} exceeds 120 characters: ${lines[i].length()} chars")
+                if (lines[i].length() > 100) {
+                    throw new AssertionError("Line ${i + 1} exceeds 100 characters: ${lines[i].length()} chars")
                 }
             }
         }

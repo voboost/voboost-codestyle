@@ -19,9 +19,10 @@ ktlint {
 
     // Disable problematic rules for Android Compose and BEM naming standards
     disabledRules = [
-        "standard:function-naming",     // Allow Android Compose functions to use PascalCase (e.g., @Composable functions)
+        "standard:function-naming",     // Allow PascalCase for @Composable functions
         "standard:filename",            // Allow BEM naming like Component.test-unit.kt
         "standard:class-naming",        // Allow BEM file naming patterns
+        "standard:enum-entry-name-case", // Allow lowercase enum values for YAML serialization
         "import-ordering",              // Allow current import order in UI components
         "no-unused-imports",            // Allow unused imports in UI components
         "max-line-length",              // Allow longer lines in UI components
@@ -61,10 +62,9 @@ spotless {
         targetExclude '**/generated/**'
         targetExclude '**/build/**'
 
-        googleJavaFormat(codeStyleVersions.getProperty("google.java.format.version"))
-            .aosp()
-            .reflowLongStrings()
-            .skipJavadocFormatting()
+        googleJavaFormat(
+            codeStyleVersions.getProperty("google.java.format.version")
+        ).aosp().reflowLongStrings().skipJavadocFormatting()
 
         removeUnusedImports()
         importOrder('java', 'javax', 'android', 'androidx', 'com', 'org', '')
@@ -84,80 +84,86 @@ spotless {
 }
 
 // Integration with check task
-check.dependsOn ktlintCheck
+tasks.named("check") {
+    dependsOn(tasks.named("ktlintCheck"))
+}
 
 // Only add checkstyle tasks if Java source sets exist
 if (project.hasProperty("android")) {
     // Android project - check if checkstyleMain exists
     afterEvaluate {
         if (tasks.findByName("checkstyleMain")) {
-            check.dependsOn checkstyleMain
+            tasks.named("check") {
+                dependsOn(tasks.named("checkstyleMain"))
+            }
         }
     }
 } else {
     // Java project
     if (tasks.findByName("checkstyleMain")) {
-        check.dependsOn checkstyleMain
+        tasks.named("check") {
+            dependsOn(tasks.named("checkstyleMain"))
+        }
     }
 }
 
 // Kotlin convenience tasks
-task formatKotlinCode {
+tasks.register("formatKotlinCode") {
     group = "formatting"
     description = "Formats Kotlin code using ktlint"
-    dependsOn ktlintFormat
+    dependsOn(tasks.named("ktlintFormat"))
 }
 
-task checkKotlinStyle {
+tasks.register("checkKotlinStyle") {
     group = "verification"
     description = "Checks Kotlin code style using ktlint"
-    dependsOn ktlintCheck
+    dependsOn(tasks.named("ktlintCheck"))
 }
 
 // Java convenience tasks
-task formatJavaCode {
+tasks.register("formatJavaCode") {
     group = "formatting"
     description = "Formats Java code using Spotless"
-    dependsOn spotlessJavaApply
+    dependsOn(tasks.named("spotlessJavaApply"))
 }
 
-task checkJavaStyle {
+tasks.register("checkJavaStyle") {
     group = "verification"
     description = "Checks Java code style using Checkstyle"
 
     // Only depend on checkstyleMain if it exists
     if (tasks.findByName("checkstyleMain")) {
-        dependsOn checkstyleMain
+        dependsOn(tasks.named("checkstyleMain"))
     } else {
         // For Android projects, try to find appropriate checkstyle task
         afterEvaluate {
             if (tasks.findByName("checkstyleMain")) {
-                dependsOn checkstyleMain
+                dependsOn(tasks.named("checkstyleMain"))
             } else if (tasks.findByName("checkstyleDebug")) {
-                dependsOn checkstyleDebug
+                dependsOn(tasks.named("checkstyleDebug"))
             } else if (tasks.findByName("checkstyleRelease")) {
-                dependsOn checkstyleRelease
+                dependsOn(tasks.named("checkstyleRelease"))
             }
         }
     }
 }
 
-task checkJavaFormat {
+tasks.register("checkJavaFormat") {
     group = "verification"
     description = "Checks Java code formatting using Spotless"
-    dependsOn spotlessJavaCheck
+    dependsOn(tasks.named("spotlessJavaCheck"))
 }
 
 // Universal convenience tasks
-task formatCode {
+tasks.register("formatCode") {
     group = "formatting"
     description = "Formats all code (Kotlin and Java)"
-    dependsOn formatKotlinCode, formatJavaCode
+    dependsOn(tasks.named("formatKotlinCode"), tasks.named("formatJavaCode"))
 }
 
-task checkCodeStyle {
+tasks.register("checkCodeStyle") {
     group = "verification"
     description = "Checks all code style (Kotlin and Java)"
-    dependsOn checkKotlinStyle, checkJavaStyle, checkJavaFormat
+    dependsOn(tasks.named("checkKotlinStyle"), tasks.named("checkJavaStyle"), tasks.named("checkJavaFormat"))
 }
 

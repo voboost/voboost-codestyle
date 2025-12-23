@@ -1,0 +1,78 @@
+// Voboost Kotlin Code Style Configuration
+// Apply this script to enable unified Kotlin code style for pure Kotlin projects
+
+// Load versions from properties file
+def codeStyleVersions = new Properties()
+file("../voboost-codestyle/versions.properties").withInputStream {
+    codeStyleVersions.load(it)
+}
+
+// Configure ktlint for Kotlin
+ktlint {
+    version = codeStyleVersions.getProperty("ktlint.version")
+
+    // Android project settings (disabled for pure JVM)
+    android = false
+
+    // Do not ignore formatting errors
+    ignoreFailures = false
+
+    // Disable problematic rules for BEM naming standards
+    disabledRules = [
+        "standard:function-naming",     // Allow PascalCase functions
+        "standard:filename",            // Allow BEM naming like Component.test-unit.kt
+        "standard:class-naming",        // Allow BEM file naming patterns
+        "import-ordering",              // Allow current import order
+        "no-unused-imports",            // Allow unused imports in some cases
+        "max-line-length",              // Allow longer lines in some cases
+        "multiline-expression-if-else", // Allow current multiline expression style
+        "conditional-statements",       // Allow current if statement brace style
+        "blank-line-before-declaration", // Allow current blank line style
+        "no-blank-line-before-rbrace",  // Allow current brace style
+        "argument-list-wrapping",       // Allow current argument list style
+        "string-template"               // Allow current string template style
+    ]
+
+    // Reporter configuration
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+    }
+
+    // File filters to exclude
+    filter {
+        exclude("**/generated/**")
+        exclude("**/build/**")
+    }
+}
+
+// Integration with check task
+tasks.named("check") {
+    dependsOn(tasks.named("ktlintCheck"))
+}
+
+// Kotlin convenience tasks
+tasks.register("formatKotlinCode") {
+    group = "formatting"
+    description = "Formats Kotlin code using ktlint"
+    dependsOn(tasks.named("ktlintFormat"))
+}
+
+tasks.register("checkKotlinStyle") {
+    group = "verification"
+    description = "Checks Kotlin code style using ktlint"
+    dependsOn(tasks.named("ktlintCheck"))
+}
+
+// Universal convenience tasks (Kotlin only)
+tasks.register("formatCode") {
+    group = "formatting"
+    description = "Formats all Kotlin code"
+    dependsOn(tasks.named("formatKotlinCode"))
+}
+
+tasks.register("checkCodeStyle") {
+    group = "verification"
+    description = "Checks all Kotlin code style"
+    dependsOn(tasks.named("checkKotlinStyle"))
+}

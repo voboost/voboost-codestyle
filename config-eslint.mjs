@@ -17,10 +17,15 @@ export default [
                 setInterval: 'readonly',
                 clearInterval: 'readonly',
                 process: 'readonly',
+                rpc: 'readonly',
             },
         },
         rules: {
             'no-console': 'error',
+
+            // temporary disabled
+            // 'eqeqeq': ['error', 'always'],  // Enforce === and !==
+            // 'camelcase': ['error', { properties: 'never' }],  // Enforce camelCase for functions
         },
     },
     // Allow console only in build files and test files

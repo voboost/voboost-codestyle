@@ -31,7 +31,7 @@ Centralized code formatting rules for all Voboost projects.
 
 | Language | Indent | Line Length | Line Endings |
 |----------|--------|-------------|--------------|
-| Kotlin/Java/XML | 4 spaces | 120 chars | LF |
+| Kotlin/Java/XML | 4 spaces | 100 chars | LF |
 | JavaScript | 4 spaces | 100 chars | LF |
 | YAML/JSON/Markdown | 2 spaces | - | LF |
 
@@ -73,7 +73,7 @@ Rules disabled for Compose and BEM compatibility:
 
 | Rule | Value |
 |------|-------|
-| Line length | 120 characters |
+| Line length | 100 characters |
 | Cyclomatic complexity | Maximum 10 |
 | Method length | Maximum 150 lines |
 | Parameter count | Maximum 7 |

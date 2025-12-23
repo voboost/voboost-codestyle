@@ -1,7 +1,7 @@
 {
   "name": "voboost-codestyle",
   "version": "1.0.0",
-  "description": "This repository contains unified code formatting rules for all Voboost projects.",
+  "description": "Unified code formatting rules for all Voboost projects",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
