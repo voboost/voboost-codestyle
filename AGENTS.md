@@ -23,6 +23,10 @@
 - Maintain backward compatibility
 - Use `git mv` to move files, not read/write
 
+## Commits
+- Commit messages are brief: 2-5 sentences describing the change, no raw
+  build/lint output (e.g. no "BUILD SUCCESSFUL: 0 errors")
+
 ## Kotlin
 - Public API methods return Result<T>; never throw exceptions in public API
 - Use nullable properties for graceful missing values
