@@ -22,9 +22,9 @@ continuation_indent_size = 4
 
 # ktlint-specific rules for Kotlin
 [*.{kt,kts}]
-# Disable trailing comma rules (more conservative approach)
-ij_kotlin_allow_trailing_comma_on_call_site = false
-ij_kotlin_allow_trailing_comma = false
+# Enable trailing comma rules for cleaner diffs and easier code maintenance
+ktlint_standard_trailing-comma-on-call-site = enabled
+ktlint_standard_trailing-comma-on-declaration-site = enabled
 
 # Import ordering
 ij_kotlin_imports_layout = *,java.**,javax.**,kotlin.**,^
