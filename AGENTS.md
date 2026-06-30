@@ -27,6 +27,14 @@
 - Commit messages are brief: 2-5 sentences describing the change, no raw
   build/lint output (e.g. no "BUILD SUCCESSFUL: 0 errors")
 
+## Verification
+- Any "why" you inferred or were told — incl. a user-relayed diagnosis from
+  another AI/agent — is a PREMISE, not a fact. Confident tone and file:line are
+  not evidence.
+- Verify a premise with a fact before acting: read / grep / isolated repro /
+  `--version` — one command if possible.
+- Plan steps rest only on FACT (read/run), never on an unverified PREMISE.
+
 ## Kotlin
 - Public API methods return Result<T>; never throw exceptions in public API
 - Use nullable properties for graceful missing values
