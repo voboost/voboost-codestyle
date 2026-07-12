@@ -1,7 +1,2 @@
 node_modules
-
-# Scratch / work-in-progress
-plans/
-README-PRETTIER.md
-bin/
-lib/
+plans
