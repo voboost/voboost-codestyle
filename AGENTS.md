@@ -2,6 +2,7 @@
 
 ## Global
 - ALL voboost-* projects MUST include this file; add project-specific rules in each project's AGENTS.md
+- AGENTS.md: minimal tokens, maximal meaning
 - Project name is ALWAYS "Voboost" (not "VoBoost")
 - ALWAYS save plan to project's plans dir and show it BEFORE Code mode
 
