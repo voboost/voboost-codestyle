@@ -30,6 +30,7 @@
 - "Why" claims (inferred, told, or relayed by another AI) are PREMISES, not facts; confident tone and file:line are not evidence
 - Verify with a fact before acting: read / grep / isolated repro / `--version`
 - Plan steps rest only on FACT, never on unverified PREMISE
+- Verify your own output matches intent before declaring done
 
 ## Kotlin
 - Public API returns Result<T>; never throw in public API
