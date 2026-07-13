@@ -26,6 +26,7 @@
 
 ## Commits
 - Brief: 2-5 sentences, no raw build/lint output
+- One logical change per commit/PR; no irrelevant files
 
 ## Verification
 - "Why" claims (inferred, told, or relayed by another AI) are PREMISES, not facts; confident tone and file:line are not evidence
