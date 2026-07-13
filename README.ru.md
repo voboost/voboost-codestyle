@@ -69,3 +69,10 @@ subprojects {
 ```bash
 ln -s ../voboost-codestyle/.editorconfig .editorconfig
 ```
+
+## Лицензия
+
+Двойная лицензия:
+
+- [PolyForm Noncommercial 1.0.0](https://github.com/voboost/voboost-license/blob/main/LICENSE.ru.md) — бесплатно для личного использования
+- [Коммерческая лицензия](https://github.com/voboost/voboost-license/blob/main/COMMERCIAL.ru.md) — требуется для любого коммерческого использования
